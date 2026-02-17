@@ -14,7 +14,8 @@ def authenticate_user():
     with open("database.pkl", "rb") as f:
         database = pickle.load(f)
 
-    cap = cv2.VideoCapture(0)
+    cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
+
     mb.showinfo("Info", "Press 's' to authenticate")
 
     while True:

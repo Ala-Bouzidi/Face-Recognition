@@ -10,14 +10,24 @@ def register_user():
     if not name:
         return
 
-    cap = cv2.VideoCapture(0)
+    cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
 
-    mb.showinfo("Info", "Press 's' to capture image")
+    mb.showinfo("Info", "Press 's' to capture and save face")
 
     while True:
         ret, frame = cap.read()
+        if not ret:
+            continue
+
+        rgb_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+        face_locations = face_recognition.face_locations(rgb_frame)
+
+        for (top, right, bottom, left) in face_locations:
+            cv2.rectangle(frame, (left, top), (right, bottom), (0, 255, 0), 2)
+
         cv2.imshow("Register - Press S", frame)
 
+        
         if cv2.waitKey(1) & 0xFF == ord('s'):
             break
 
@@ -33,7 +43,6 @@ def register_user():
 
     encoding = faces[0]
 
-    # Save encoding
     if os.path.exists("database.pkl"):
         with open("database.pkl", "rb") as f:
             database = pickle.load(f)
